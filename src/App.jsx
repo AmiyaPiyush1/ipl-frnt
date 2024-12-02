@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Signup from './signup';
 import Login from './login';
 import Dashboard from './dashboard';
-import Team_choose from './team_choose';
+import Team_choose  from './team_choose';
 function App() {
   return (
     <Router>
