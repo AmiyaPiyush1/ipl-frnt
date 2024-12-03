@@ -50,7 +50,7 @@ const Dashboard = () => {
   useEffect(() => {
     if (p_team) {
       axios
-        .get('http://localhost:3001/product_listing', { params: { Team: p_team } })
+        .get('https://ipl-back-1x76.vercel.app/product_listing', { params: { Team: p_team } })
         .then((response) => {
           setProducts(response.data);
         })
