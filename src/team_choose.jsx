@@ -94,7 +94,7 @@ const TeamChoose = () => {
 
   const navigateToDashboard = async () => {
     try {
-      const response = await axios.post("http://localhost:3001/teamassigned", {
+      const response = await axios.post("https://ipl-back-1x76.vercel.app/teamassigned", {
         username,
         team: assignedTeam,
       });

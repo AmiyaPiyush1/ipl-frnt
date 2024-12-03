@@ -25,7 +25,7 @@ const Signup = () => {
     } else {
       try {
         setLoading(true);
-        const response = await axios.post("http://localhost:3001/user_name", {
+        const response = await axios.post("https://ipl-back-1x76.vercel.app/user_name", {
           form: formData.username,
           password: formData.password,
         });

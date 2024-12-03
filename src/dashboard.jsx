@@ -23,7 +23,7 @@ const Dashboard = () => {
 
     if (username) {
       axios
-        .get(`http://localhost:3001/teamassigned`, { params: { username } })
+        .get(`https://ipl-back-1x76.vercel.app/teamassigned`, { params: { username } })
         .then((response) => {
           const { team, color, logo } = response.data; // Destructure response data
           setTeamDetails({ team, color, logo }); // Set all team details
