@@ -21,50 +21,59 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+  
     if (!formData.username || !formData.password) {
       alert("Please fill in all fields");
-    } else {
-      try {
-        setLoading(true);
-        const response = await axios.post(
-          "https://ipl-back-1x76.vercel.app/login",
-          {
-            form: formData.username,
-            password: formData.password,
-          }
-        );
-        setLoading(false);
-        console.log("Login Successful:", response.data);
-        localStorage.setItem("name", formData.username);
-        navigate("/Dashboard");
-      } catch (error) {
-        setLoading(false);
-        setErrorMessage("Invalid username or password. Please try again.");
-      }
+      return;
     }
-  };
-
-  useEffect(() => {
-    const username = localStorage.getItem("name"); // Fetch username from localStorage
-    const fetchTeamDetails = async () => {
-      try {
-        if (username) {
-          const response = await axios.get(
+  
+    try {
+      setLoading(true);
+  
+      // Login request
+      const response = await axios.post(
+        "https://ipl-back-1x76.vercel.app/login",
+        {
+          form: formData.username,
+          password: formData.password,
+        }
+      );
+  
+      setLoading(false);
+      console.log("Login Successful:", response.data);
+  
+      // Save username in localStorage
+      localStorage.setItem("name", formData.username);
+  
+      // Fetch team details after successful login
+      const fetchTeamDetails = async (username) => {
+        try {
+          const teamResponse = await axios.get(
             "https://ipl-back-1x76.vercel.app/teamassigned",
             { params: { username } }
           );
-          console.log("Team details:", response.data); // Log the retrieved team details
-        } else {
-          console.log("No username found in localStorage.");
+          console.log("Team details:", teamResponse.data);
+          localStorage.setItem("assignedTeam", teamResponse.data.team); // Save team name to localStorage
+        } catch (error) {
+          console.error("Error fetching team details:", error);
         }
-      } catch (error) {
-        console.error("Error fetching team details:", error);
-      }
-    };
+      };
+  
+      await fetchTeamDetails(formData.username);
+  
+      // Navigate to Dashboard
+      navigate("/Dashboard");
+    } catch (error) {
+      setLoading(false);
+      setErrorMessage("Invalid username or password. Please try again.");
+    }
+  };
+  
+   
 
-    fetchTeamDetails();
-  }, []);
 
+
+  
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-600 to-purple-600">
       <div className="bg-white p-8 rounded-xl shadow-xl w-full sm:w-96">
