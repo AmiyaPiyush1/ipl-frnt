@@ -5,6 +5,7 @@ import ScrollReveal from "scrollreveal";
 import axios from "axios";
 
 const TeamChoose = () => {
+  // State variables for city, color, batting style, points, team, and step tracking
   const [city, setCity] = useState("");
   const [color, setColor] = useState("");
   const [battingStyle, setBattingStyle] = useState("");
@@ -13,9 +14,11 @@ const TeamChoose = () => {
   const [step, setStep] = useState(1);
   const [selectedStyle, setSelectedStyle] = useState("");
 
+  // Navigate to other routes
   const navigate = useNavigate();
   const username = localStorage.getItem("name");
 
+  // Team mapping for cities
   const teamMapping = {
     Bangalore: "RCB",
     Chennai: "CSK",
@@ -24,6 +27,25 @@ const TeamChoose = () => {
     Delhi: "DC",
   };
 
+  // Mapping for team colors
+  const teamColorMap = {
+    RCB: "red",
+    CSK: "yellow",
+    MI: "blue",
+    KKR: "purple",
+    DC: "blue",
+  };
+
+  // Mapping for team batting styles
+  const teamStyleMap = {
+    RCB: "aggressive",
+    CSK: "balanced",
+    MI: "aggressive",
+    KKR: "balanced",
+    DC: "aggressive",
+  };
+
+  // Scroll reveal effect when the component is mounted
   useEffect(() => {
     ScrollReveal().reveal(".reveal", {
       distance: "50px",
@@ -32,66 +54,62 @@ const TeamChoose = () => {
     });
   }, []);
 
+  // Form animation for smooth transition
   const formAnimation = useSpring({
     opacity: 1,
     transform: "scale(1)",
     from: { opacity: 0, transform: "scale(0.9)" },
   });
 
+  // Handle city selection and move to next step
   const handleCitySubmit = (selectedCity) => {
     setCity(selectedCity);
-    setPoints(3);
-    setStep(2);
+    setPoints(3); // Set points for city selection
+    setStep(2); // Move to next step
   };
 
+  // Handle color selection and update points
   const handleColorSubmit = (selectedColor) => {
     setColor(selectedColor);
 
-    const teamColorMap = {
-      RCB: "red",
-      CSK: "yellow",
-      MI: "blue",
-      KKR: "purple",
-      DC: "blue",
-    };
+    // Get the team based on the selected city
     const teamName = teamMapping[city];
+
+    // Get the assigned team color
     const assignedColor = teamColorMap[teamName] || "blue";
 
+    // Calculate points based on color match
     const colorPoints = selectedColor === assignedColor ? 2 : -2;
     setPoints((prev) => prev + colorPoints);
-    setStep(3);
+    setStep(3); // Move to next step
   };
 
+  // Handle batting style selection and calculate points
   const handleStyleSubmit = (style) => {
     setBattingStyle(style);
     setSelectedStyle(style);
 
-    const teamStyleMap = {
-      RCB: "aggressive",
-      CSK: "balanced",
-      MI: "aggressive",
-      KKR: "balanced",
-      DC: "aggressive",
-    };
+    // Get the team style based on selected city
     const teamName = teamMapping[city];
     const assignedStyle = teamStyleMap[teamName] || "balanced";
 
+    // Calculate points based on style match
     const stylePoints = style === assignedStyle ? 1 : -1;
     const newPoints = points + stylePoints;
 
-    setPoints(newPoints);
-
+    // Decide final team assignment based on points
     const randomTeams = Object.values(teamMapping);
     const finalTeam =
       newPoints > 1
-        ? teamMapping[city]
-        : randomTeams[Math.floor(Math.random() * randomTeams.length)];
-    setAssignedTeam(finalTeam);
+        ? teamMapping[city] // Assign the team based on city
+        : randomTeams[Math.floor(Math.random() * randomTeams.length)]; // Randomly assign a team
 
-    localStorage.setItem("assignedTeam", finalTeam);
-    setStep(4);
+    setAssignedTeam(finalTeam);
+    localStorage.setItem("assignedTeam", finalTeam); // Store assigned team in localStorage
+    setStep(4); // Move to final step
   };
 
+  // Handle navigation to dashboard after team assignment
   const navigateToDashboard = async () => {
     try {
       const response = await axios.post("https://ipl-back-1x76.vercel.app/teamassigned", {
@@ -99,7 +117,7 @@ const TeamChoose = () => {
         team: assignedTeam,
       });
       console.log("Team assignment response:", response.data);
-      navigate("/Dashboard");
+      navigate("/Dashboard"); // Navigate to the dashboard
     } catch (error) {
       console.error("Error assigning team:", error.response?.data || error.message);
       alert("Failed to assign team. Please try again.");
@@ -112,6 +130,7 @@ const TeamChoose = () => {
         style={formAnimation}
         className="w-11/12 max-w-lg p-6 bg-white rounded-lg shadow-lg reveal"
       >
+        {/* Step 1: Choose City */}
         {step === 1 && (
           <div className="text-center">
             <h2 className="text-2xl font-bold mb-6">Choose Your City</h2>
@@ -129,6 +148,7 @@ const TeamChoose = () => {
           </div>
         )}
 
+        {/* Step 2: Choose Color */}
         {step === 2 && (
           <div className="text-center">
             <h2 className="text-2xl font-bold mb-6">Choose Your Favorite Color</h2>
@@ -147,6 +167,7 @@ const TeamChoose = () => {
           </div>
         )}
 
+        {/* Step 3: Choose Batting Style */}
         {step === 3 && (
           <div className="text-center">
             <h2 className="text-2xl font-bold mb-6">Choose Your Batting Style</h2>
@@ -168,6 +189,7 @@ const TeamChoose = () => {
           </div>
         )}
 
+        {/* Step 4: Display Assigned Team and Navigate */}
         {step === 4 && (
           <div className="text-center">
             <h2 className="text-3xl font-bold mb-4">🎉 Congratulations! 🎉</h2>

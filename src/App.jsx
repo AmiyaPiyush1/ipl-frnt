@@ -3,6 +3,7 @@ import Signup from './signup';
 import Login from './login';
 import Dashboard from './dashboard';
 import Team_choose  from './team_choose';
+import Cart from './cart';
 function App() {
   return (
     <Router>
@@ -11,6 +12,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/Dashboard" element={<Dashboard />} />
         <Route path="/team_choose" element={<Team_choose />} />
+        <Route path="/cart" element={<Cart/>} />
       </Routes>
     </Router>
   );
