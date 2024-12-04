@@ -16,7 +16,8 @@ This project implements a team assignment system using MongoDB and Node.js. User
 
 ### Prerequisites
 - **Node.js**: Ensure you have Node.js installed. 
-- **MongoDB**: Set up a local or cloud MongoDB instance.  
+- **MongoDB**: Set up a local or cloud MongoDB instance.
+- **React**: Ensure you have proper react setup.    
 
 ### Steps
 
