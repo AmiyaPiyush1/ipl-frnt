@@ -20,6 +20,7 @@ const Dashboard = () => {
 
   // Fetch team details after component mounts
   useEffect(() => {
+    // Initialize ScrollReveal animation on elements with 'reveal' class
     ScrollReveal().reveal('.reveal', {
       delay: 200,
       duration: 1000,
@@ -28,7 +29,7 @@ const Dashboard = () => {
       easing: 'ease-out',
     });
 
-    // Fetch team data from API
+    // Fetch team data from API if username exists
     if (username) {
       axios
         .get('https://ipl-back-1x76.vercel.app/teamassigned', { params: { username } })
@@ -52,6 +53,7 @@ const Dashboard = () => {
 
   // Fetch products based on team
   useEffect(() => {
+    // Fetch products if assigned team exists
     if (p_team) {
       axios
         .get('https://ipl-back-1x76.vercel.app/product_listing', { params: { Team: p_team } })
@@ -70,6 +72,7 @@ const Dashboard = () => {
     setShowQR(true); // Show QR code
   };
 
+  // Handle return to product view
   const handleReturnClick = () => {
     setShowQR(false); // Hide QR code
   };
@@ -82,7 +85,8 @@ const Dashboard = () => {
   // Add product to cart and show confirmation
   const handleCartClick = async (product) => {
     try {
-      await axios.post('https://ipl-back-1x76.vercel.app/add_to_cart', {
+      // Send request to backend to add product to cart
+      await axios.post('http://localhost:3001/add_to_cart', {
         Team: p_team,
         Username: username,
         P_url: product.P_url,
@@ -103,8 +107,8 @@ const Dashboard = () => {
 
   // Handle user logout
   const handleLogout = () => {
-    localStorage.removeItem('name');
-    localStorage.removeItem('assignedTeam');
+    localStorage.removeItem('name'); // Remove username from localStorage
+    localStorage.removeItem('assignedTeam'); // Remove assigned team from localStorage
     navigate('/login'); // Navigate to login page
   };
 
@@ -234,21 +238,27 @@ const Dashboard = () => {
                       className="h-40 w-full object-cover rounded-t-lg"
                     />
                     <div className="p-2">
-                      <h3 className="text-lg font-semibold text-center">{product.P_name}</h3>
-                      <p className="text-md text-gray-600 text-center">Price: ₹{product.P_price}</p>
-                      <button
-                        onClick={() => handleBuyClick(product)}
-                        style={getButtonStyle(teamDetails.color)}
-                        className="w-full mt-4 py-2 rounded"
+                      <h3
+                        className="text-xl font-semibold text-center mb-4"
+                        style={{ color: teamDetails.color || '#333' }}
                       >
-                        Buy Now
-                      </button>
-                      <button
-                        onClick={() => handleCartClick(product)}
-                        className="mt-2 w-full py-2 bg-green-500 text-white rounded"
-                      >
-                        Add to Cart
-                      </button>
+                        {product.P_name}
+                      </h3>
+                      <p className="text-center text-lg text-gray-600">₹{product.P_price}</p>
+                      <div className="text-center mt-4 space-x-2">
+                        <button
+                          onClick={() => handleBuyClick(product)}
+                          className="w-full bg-yellow-500 text-white py-2 rounded hover:bg-yellow-600 transition-colors"
+                        >
+                          Buy Now
+                        </button>
+                        <button
+                          onClick={() => handleCartClick(product)}
+                          className="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600 transition-colors"
+                        >
+                          Add to Cart
+                        </button>
+                      </div>
                     </div>
                   </>
                 )}
@@ -256,16 +266,11 @@ const Dashboard = () => {
             ))}
           </div>
         ) : (
-          <p className="text-center text-xl font-medium">No products available for your team.</p>
+          <p className="text-center text-lg font-medium text-gray-600">
+            No products available at the moment.
+          </p>
         )}
       </div>
-
-    
-      {addedToCart && (
-        <div className="fixed bottom-10 left-1/2 transform -translate-x-1/2 bg-green-500 text-white py-3 px-6 rounded-lg shadow-xl">
-          <p className="text-center font-medium">Added to Cart</p>
-        </div>
-      )}
     </div>
   );
 };
