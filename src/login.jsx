@@ -73,7 +73,7 @@ const Dashboard = () => {
   // Add product to cart and show confirmation
   const handleCartClick = async (product) => {
     try {
-      await axios.post('http://localhost:3001/add_to_cart', {
+      await axios.post('https://ipl-back-1x76.vercel.app/add_to_cart', {
         Team: p_team,
         Username: username,
         P_url: product.P_url,

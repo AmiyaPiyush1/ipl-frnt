@@ -13,7 +13,7 @@ const Cart = () => {
     // Fetch cart items on loading
     const fetchCartItems = async () => {
       try {
-        const response = await axios.get("http://localhost:3001/add_to_cart", {
+        const response = await axios.get("https://ipl-back-1x76.vercel.app/add_to_cart", {
           params: { Username: username }
         });
         setCartItems(response.data);
@@ -50,7 +50,7 @@ const Cart = () => {
 
   const handleDeleteClick = async (productId) => {
     try {
-      await axios.delete(`http://localhost:3001/add_to_cart`, {
+      await axios.delete(`https://ipl-back-1x76.vercel.app/add_to_cart`, {
         params: { productId },
       });
       const updatedCartItems = cartItems.filter(item => item._id !== productId);
