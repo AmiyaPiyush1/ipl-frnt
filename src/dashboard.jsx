@@ -235,30 +235,25 @@ const Dashboard = () => {
                     <img
                       src={product.P_url}
                       alt={product.P_name}
-                      className="h-40 w-full object-cover rounded-t-lg"
+                      className="mx-auto h-40 w-auto mb-4"
                     />
-                    <div className="p-2">
-                      <h3
-                        className="text-xl font-semibold text-center mb-4"
-                        style={{ color: teamDetails.color || '#333' }}
+                    <p className="text-lg font-semibold text-center">{product.P_name}</p>
+                    <p className="text-xl text-center font-bold mt-2">
+                      ₹{product.P_price}
+                    </p>
+                    <div className="flex justify-between mt-4">
+                      <button
+                        onClick={() => handleCartClick(product)}
+                        className="py-2 px-4 bg-green-500 text-white rounded hover:bg-green-600 transition-all"
                       >
-                        {product.P_name}
-                      </h3>
-                      <p className="text-center text-lg text-gray-600">₹{product.P_price}</p>
-                      <div className="text-center mt-4 space-x-2">
-                        <button
-                          onClick={() => handleBuyClick(product)}
-                          className="w-full bg-yellow-500 text-white py-2 rounded hover:bg-yellow-600 transition-colors"
-                        >
-                          Buy Now
-                        </button>
-                        <button
-                          onClick={() => handleCartClick(product)}
-                          className="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600 transition-colors"
-                        >
-                          Add to Cart
-                        </button>
-                      </div>
+                        {addedToCart ? 'Added to Cart' : 'Add to Cart'}
+                      </button>
+                      <button
+                        onClick={() => handleBuyClick(product)}
+                        className="py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600 transition-all"
+                      >
+                        Buy Now
+                      </button>
                     </div>
                   </>
                 )}
@@ -266,9 +261,7 @@ const Dashboard = () => {
             ))}
           </div>
         ) : (
-          <p className="text-center text-lg font-medium text-gray-600">
-            No products available at the moment.
-          </p>
+          <p className="text-center text-xl font-medium">No products available.</p>
         )}
       </div>
     </div>
