@@ -20,7 +20,6 @@ const Dashboard = () => {
 
   // Fetch team details after component mounts
   useEffect(() => {
-    // Initialize ScrollReveal animation on elements with 'reveal' class
     ScrollReveal().reveal('.reveal', {
       delay: 200,
       duration: 1000,
@@ -29,7 +28,7 @@ const Dashboard = () => {
       easing: 'ease-out',
     });
 
-    // Fetch team data from API if username exists
+    // Fetch team data from API
     if (username) {
       axios
         .get('https://ipl-back-1x76.vercel.app/teamassigned', { params: { username } })
@@ -53,7 +52,6 @@ const Dashboard = () => {
 
   // Fetch products based on team
   useEffect(() => {
-    // Fetch products if assigned team exists
     if (p_team) {
       axios
         .get('https://ipl-back-1x76.vercel.app/product_listing', { params: { Team: p_team } })
@@ -72,7 +70,6 @@ const Dashboard = () => {
     setShowQR(true); // Show QR code
   };
 
-  // Handle return to product view
   const handleReturnClick = () => {
     setShowQR(false); // Hide QR code
   };
@@ -85,7 +82,6 @@ const Dashboard = () => {
   // Add product to cart and show confirmation
   const handleCartClick = async (product) => {
     try {
-      // Send request to backend to add product to cart
       await axios.post('http://localhost:3001/add_to_cart', {
         Team: p_team,
         Username: username,
@@ -107,8 +103,8 @@ const Dashboard = () => {
 
   // Handle user logout
   const handleLogout = () => {
-    localStorage.removeItem('name'); // Remove username from localStorage
-    localStorage.removeItem('assignedTeam'); // Remove assigned team from localStorage
+    localStorage.removeItem('name');
+    localStorage.removeItem('assignedTeam');
     navigate('/login'); // Navigate to login page
   };
 
@@ -235,24 +231,23 @@ const Dashboard = () => {
                     <img
                       src={product.P_url}
                       alt={product.P_name}
-                      className="mx-auto h-40 w-auto mb-4"
+                      className="h-40 w-full object-cover rounded-t-lg"
                     />
-                    <p className="text-lg font-semibold text-center">{product.P_name}</p>
-                    <p className="text-xl text-center font-bold mt-2">
-                      ₹{product.P_price}
-                    </p>
-                    <div className="flex justify-between mt-4">
-                      <button
-                        onClick={() => handleCartClick(product)}
-                        className="py-2 px-4 bg-green-500 text-white rounded hover:bg-green-600 transition-all"
-                      >
-                        {addedToCart ? 'Added to Cart' : 'Add to Cart'}
-                      </button>
+                    <div className="p-2">
+                      <h3 className="text-lg font-semibold text-center">{product.P_name}</h3>
+                      <p className="text-md text-gray-600 text-center">Price: ₹{product.P_price}</p>
                       <button
                         onClick={() => handleBuyClick(product)}
-                        className="py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600 transition-all"
+                        style={getButtonStyle(teamDetails.color)}
+                        className="w-full mt-4 py-2 rounded"
                       >
                         Buy Now
+                      </button>
+                      <button
+                        onClick={() => handleCartClick(product)}
+                        className="mt-2 w-full py-2 bg-green-500 text-white rounded"
+                      >
+                        Add to Cart
                       </button>
                     </div>
                   </>
@@ -261,9 +256,16 @@ const Dashboard = () => {
             ))}
           </div>
         ) : (
-          <p className="text-center text-xl font-medium">No products available.</p>
+          <p className="text-center text-xl font-medium">No products available for your team.</p>
         )}
       </div>
+
+    
+      {addedToCart && (
+        <div className="fixed bottom-10 left-1/2 transform -translate-x-1/2 bg-green-500 text-white py-3 px-6 rounded-lg shadow-xl">
+          <p className="text-center font-medium">Added to Cart</p>
+        </div>
+      )}
     </div>
   );
 };
